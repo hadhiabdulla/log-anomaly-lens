@@ -2,7 +2,7 @@
 const $=id=>document.getElementById(id);
 let output=null;
 const showError=message=>{$('error').textContent=message;$('error').hidden=false;};
-const reset=()=>{$('results').hidden=true;$('error').hidden=true;output=null;};
+const reset=()=>{$('results').hidden=true;$('cards').replaceChildren();$('summary').textContent='';$('error').hidden=true;$('error').textContent='';output=null;};
 for(const field of ['baseline','candidate']) {
   $(field).addEventListener('input',()=>{reset();$('state').textContent='Inputs changed. Learn and compare again.';});
   $(field+'-file').addEventListener('change',async event=>{
@@ -40,7 +40,7 @@ $('analyze').addEventListener('click',()=>{
       card.append(element('p',`${s.eventCount} events / starts ${s.start}`,'muted'));
       const chips=element('div',undefined,'signals');s.components.forEach(c=>chips.append(element('span',`${c.name}: ${c.weighted.toFixed(2)} contribution`)));card.append(chips);
       const list=element('ul');
-      for(const t of s.rare)list.append(element('li',`${t.from} → ${t.to}: seen ${t.count} times in baseline; ${t.bits.toFixed(2)} bits surprise.`));
+      for(const t of s.rare)list.append(element('li',`${t.from} → ${t.to}: seen ${t.count} times in baseline; ${t.bits.toFixed(2)} bits surprise; occurs ${t.occurrences} time(s) here.`));
       if(s.unknown.length)list.append(element('li','Unseen event labels: '+s.unknown.join(', ')+'. May be a schema change or new legitimate workflow.'));
       if(s.eventCount===1)list.append(element('li','One event only: no inter-event pace evidence.'));
       card.append(list);$('cards').append(card);
