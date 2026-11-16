@@ -6,6 +6,8 @@ This is **not an attack detector or a risk probability**. A new legitimate workf
 
 ## Run it
 
+[Try the live browser demo](https://hadhiabdulla.github.io/log-anomaly-lens/). Use the built-in synthetic data first.
+
 No build, account, API key, package installation or model download is needed.
 
 ```sh
