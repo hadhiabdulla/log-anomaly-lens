@@ -100,7 +100,13 @@
     return sessions.map(s=>{
       const f=features(model,s), d=distance(f,model.stats), raw=combine(d);
       const components=Object.entries(d).map(([name,value])=>({name,value,weighted:value*({sequence:0.5,volume:0.2,pace:0.2,hour:0.1}[name])})).sort((a,b)=>b.weighted-a.weighted);
-      const rare=[...f.transitions].sort((a,b)=>b.bits-a.bits).slice(0,3);
+      const unique=new Map();
+      for(const t of f.transitions) {
+        const key=JSON.stringify([t.from,t.to]);
+        if(unique.has(key)) unique.get(key).occurrences++;
+        else unique.set(key,{...t,occurrences:1});
+      }
+      const rare=[...unique.values()].sort((a,b)=>b.bits-a.bits).slice(0,3);
       return {id:s.id,raw,review:raw>=model.reviewLine,eventCount:s.events.length,start:new Date(s.events[0].t).toISOString(),components,rare,unknown:f.unknown,features:f};
     }).sort((a,b)=>b.raw-a.raw||a.id.localeCompare(b.id));
   }
