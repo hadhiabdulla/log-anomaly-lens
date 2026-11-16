@@ -40,3 +40,5 @@ test('identical observed benign and malicious intent indistinguishable',()=>{con
 test('comparison permutation leaves model ranking unchanged',()=>assert.deepEqual(L.score(model,[...L.parse(demo.candidate)].reverse()).map(s=>[s.id,s.raw]),results.map(s=>[s.id,s.raw])));
 test('no network APIs or persistent storage in app/core',()=>{for(const name of ['engine.js','app.js']){const s=fs.readFileSync(__dirname+'/'+name,'utf8');assert.doesNotMatch(s,/\b(fetch|XMLHttpRequest|WebSocket|sendBeacon|localStorage|indexedDB)\s*[.(]/);}});
 test('HTML CSP denies connection egress and remote scripts',()=>{const s=fs.readFileSync(__dirname+'/index.html','utf8');assert.match(s,/connect-src 'none'/);assert.match(s,/script-src 'self'/);assert.doesNotMatch(s,/<script[^>]+src="https?:/);});
+
+test('repeated transitions aggregated for readable evidence',()=>{const s=byId('burst-retries');assert.equal(s.rare[0].occurrences,17);assert.equal(new Set(s.rare.map(t=>JSON.stringify([t.from,t.to]))).size,s.rare.length);});
