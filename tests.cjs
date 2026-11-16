@@ -51,3 +51,9 @@ test('learning a different event order changes novelty ranking',()=>{
  assert.ok(L.score(model,normal)[0].raw<L.score(model,reversed)[0].raw);
  assert.ok(L.score(other,normal)[0].raw>L.score(other,reversed)[0].raw);
 });
+
+const X=require('./explain.js');
+test('plain explanation counts observed failures, not attacks',()=>{const ss=L.parse(demo.candidate).find(s=>s.id==='burst-retries');const x=X.describe(model,ss,byId('burst-retries'));assert.match(x.summary,/18 recorded sign-in failures/);assert.match(x.summary,/closer together/);assert.match(x.next,/does not establish an attack/);});
+test('plain explanation warns novelty may be legitimate',()=>{const ss=L.parse(demo.candidate).find(s=>s.id==='new-export-path');assert.match(X.describe(model,ss,byId('new-export-path')).summary,/new feature or naming change/);});
+test('plain explanation never grants safety pass below threshold',()=>{const ss=L.parse(demo.candidate).find(s=>s.id==='ordinary-morning');const x=X.describe(model,ss,byId('ordinary-morning'));assert.match(x.summary,/does not prove.*safe/);assert.match(x.next,/Do not treat this as a safety pass/);});
+test('beginner and advanced controls and guided event form shipped',()=>{const h=fs.readFileSync(__dirname+'/index.html','utf8');for(const id of ['beginner-mode','advanced-mode','event-form','event-target','event-session','event-time','event-kind','undo-event'])assert.ok(h.includes('id="'+id+'"'));assert.match(h,/<body class="beginner">/);});
