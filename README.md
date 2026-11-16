@@ -15,7 +15,13 @@ python3 -m http.server 8000
 # Open http://localhost:8000
 ```
 
-Use **Load synthetic demo**, then **Learn baseline & compare**. Or paste two separate JSONL windows: a reviewed normal baseline and new candidate sessions. The baseline is never silently retrained on candidates.
+Beginner is the default. Tap **1. Load practice example**, then **2. Compare visits**. Plain-language cards explain observed event counts, unusual pacing/order, new event names and sensible next checks. Each card keeps raw scores and technical evidence in an expandable panel. Nothing labels a low score as safe.
+
+To enter your own small dataset without JSON, expand **Add events without writing code**: choose Normal examples or New visits, set an explicit visit ID, UTC time and event type, then Add event. A counter shows dataset sizes; Undo removes the last manual addition. At least 5 separate normal visits and 20 events are still required, not silently replaced with synthetic examples. Use only representative activity you are authorized to process.
+
+Switch to **Advanced** for direct JSONL/file inputs, all technical evidence expanded, scoring-method details and the same export. Switching views preserves both datasets and the results; it does not retrain or change the model. The simple event form is a small-data aid, not an automatic log importer.
+
+In Advanced, use **Load synthetic demo**, then **Learn baseline & compare**. Or paste two separate JSONL windows: a reviewed normal baseline and new candidate sessions. The baseline is never silently retrained on candidates.
 
 ```json
 {"timestamp":"2026-11-01T10:00:00Z","session":"pseudonymous-session-1","event":"login"}
@@ -75,7 +81,7 @@ Observed demo behavior:
 
 All parsing, fitting and scoring happen in the open tab. The app has no `fetch`, XHR, WebSocket, beacon, analytics, cookies or persistent browser storage. CSP denies connection requests (`connect-src 'none'`) and allows same-origin scripts only. Static hosting still receives normal asset requests and connection metadata. Browser extensions and your device are outside this app's control. Clear all removes inputs/results from the UI; closing the tab ends the in-memory session. Export creates a local download only.
 
-Files: `engine.js` (parser/model), `app.js` (interaction/render/export), `index.html` + `style.css` (UI), `tests.cjs` (checks). Rendered log labels use `textContent`, never raw HTML.
+Files: `engine.js` (parser/model), `app.js` (interaction/render/export), `explain.js` (observed-event plain-language summaries), `index.html` + `style.css` (UI), `tests.cjs` (checks). Rendered log labels use `textContent`, never raw HTML.
 
 ## Contribution and event disclosure
 
