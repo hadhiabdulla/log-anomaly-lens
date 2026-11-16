@@ -1,0 +1,1 @@
+{"name":"log-anomaly-lens","version":"0.1.0","private":true,"scripts":{"test":"node --test tests.cjs"},"description":"Browser-local session sequence anomaly triage. No package dependencies."}
