@@ -26,7 +26,8 @@ $('event-form').addEventListener('submit',e=>{
  try{
   const target=$('event-target').value;
   const kind=$('event-kind').value==='custom'?$('event-custom').value.trim():$('event-kind').value;
-  const row={timestamp:($('event-time').value.length===16?$('event-time').value+':00':$('event-time').value)+'Z',session:$('event-session').value.trim(),event:kind};
+  const clock=$('event-time').value.trim().replace(' ','T');
+  const row={timestamp:(clock.length===16?clock+':00':clock)+'Z',session:$('event-session').value.trim(),event:kind};
   const line=JSON.stringify(row);LogLens.parse(line);
   added.push({target,previous:$(target).value});
   $(target).value=($(target).value.trim()?$(target).value.trim()+'\n':'')+line;
