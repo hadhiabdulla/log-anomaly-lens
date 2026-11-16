@@ -42,3 +42,12 @@ test('no network APIs or persistent storage in app/core',()=>{for(const name of 
 test('HTML CSP denies connection egress and remote scripts',()=>{const s=fs.readFileSync(__dirname+'/index.html','utf8');assert.match(s,/connect-src 'none'/);assert.match(s,/script-src 'self'/);assert.doesNotMatch(s,/<script[^>]+src="https?:/);});
 
 test('repeated transitions aggregated for readable evidence',()=>{const s=byId('burst-retries');assert.equal(s.rare[0].occurrences,17);assert.equal(new Set(s.rare.map(t=>JSON.stringify([t.from,t.to]))).size,s.rare.length);});
+
+test('learning a different event order changes novelty ranking',()=>{
+ const altered=baseline.map(s=>({...s,events:s.events.map((e,i)=>({...e,event:s.events[s.events.length-1-i].event}))}));
+ const other=L.train(altered);
+ const normal=L.parse(['login','read','read','logout'].map((e,i)=>event('n',e,`2026-11-09T10:0${i}:00Z`)).join('\n'));
+ const reversed=L.parse(['logout','read','read','login'].map((e,i)=>event('r',e,`2026-11-09T10:0${i}:00Z`)).join('\n'));
+ assert.ok(L.score(model,normal)[0].raw<L.score(model,reversed)[0].raw);
+ assert.ok(L.score(other,normal)[0].raw>L.score(other,reversed)[0].raw);
+});
